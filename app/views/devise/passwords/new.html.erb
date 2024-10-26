@@ -1,0 +1,22 @@
+<div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+  <div class="card p-4" style="width: 100%; max-width: 400px;">
+    <h2 class="text-center mb-4">Forgot Password</h2>
+
+    <p class="text-center">Please enter your email address. You will receive a link to reset your password via email.</p>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { class: "form" }) do |f| %>
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email, autofocus: true, class: "form-control" %>
+      </div>
+
+      <div class="text-center">
+        <%= f.submit "Send Reset Link", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+    <div class="text-center mt-3">
+      <p>Remembered your password? <%= link_to 'Sign In', new_user_session_path %></p>
+    </div>
+  </div>
+</div>

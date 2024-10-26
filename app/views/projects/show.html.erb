@@ -1,0 +1,67 @@
+<h1 class="mb-4"  style="text-align: center;">Project Name: <%= @project.name %></h1> 
+<%= link_to 'Sign out', destroy_user_session_path, data: { turbo_method: :delete }, class: "btn btn-danger", style: "float: right"; %> <h2 style="float: right;">|</h2> <%= link_to 'Projects Portal', projects_path, class: "btn btn-primary mb-2", style: "float: right" ;%>
+
+
+<p class="lead"><strong>Description:</strong> <%= @project.description %></p>
+
+<h2 class="mt-4">Assigned Users:</h2>
+<ul class="list-group mb-4">
+  <% @project.users.each do |user| %>
+    <li class="list-group-item">
+      <%= user.name %> (<%= user.user_type.humanize %>)
+    </li>
+  <% end %>
+</ul>
+
+
+
+<div class="mt-3">
+        <% if can? :update, @project %>
+        <%= link_to 'Update Project', edit_project_path(@project), class: 'btn btn-warning' %>
+        <% end %>
+</div>
+<br>
+<div class="mt-3">
+        <% if can? :destroy, @project %>
+        <%= button_to 'Delete Project', project_path(@project), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'; %>
+        <% end %>
+      </div>
+
+    <div class="mt-4">
+    <h3 style="float: left;">Bugs Associated with this Project</h3>
+<% if can? :create, Bug %>
+ <%= link_to 'Manage Bugs And Features', project_bugs_path(@project),class: 'btn btn-warning', style: "float: right" %>
+    <% end %>
+
+
+   <% if can? :create, Bug %>
+  <%= link_to "Report a New Bug", new_project_bug_path(@project), class: 'btn btn-secondary',style: "float: right";%>
+<% end %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Category</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @project.bugs.each do |bug| %>
+          <tr>
+            <td><%= bug.title %></td>
+            <td><%= bug.category.humanize %></td>
+            <td><%= bug.status.humanize %></td>
+            <td>
+              <%= link_to 'View', project_bug_path(@project, bug), class: 'btn btn-info btn-sm' %>
+             
+              <% if can? :destroy, @bug %>
+
+              <%= button_to 'Delete', project_bug_path(@project, bug), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>

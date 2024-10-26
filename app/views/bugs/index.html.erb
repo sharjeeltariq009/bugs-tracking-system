@@ -1,0 +1,41 @@
+<h1 class="text-center mb-4">Bugs for <%= @project.name %></h1>
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Type</th>
+      <th scope="col">Status</th>
+      <th scope="col">Developer</th>
+      <th scope="col" class="text-center">Edit</th>
+      <th scope="col" class="text-center">Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bugs.each do |bug| %>
+      <tr>
+        <td><%= link_to bug.title, project_bug_path(@project, bug), class: "text-decoration-none" %></td>
+        <td><%= bug.category.humanize %></td>
+        <td><%= bug.status.humanize %></td>
+        <td><%= bug.developer&.name || 'Unassigned' %></td>
+        <td class="text-center">
+          <% if can?(:edit, bug) %>
+            <%= link_to 'Edit', edit_project_bug_path(@project, bug), class: "btn btn-warning btn-sm" %>
+          <% end %>
+        </td>
+        <td class="text-center">
+          <% if can?(:destroy, bug) %>
+            <%= link_to 'Delete', project_bug_path(@project, bug), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="text-right">
+  <%= link_to 'New Bug', new_project_bug_path(@project), class: "btn btn-success" %>
+  <%= link_to 'Back to Project', project_path(@project), class: 'btn btn-info' %>
+
+</div>

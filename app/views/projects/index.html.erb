@@ -1,0 +1,42 @@
+<h1 align="center">Projects</h1> <%= link_to 'Sign out', destroy_user_session_path, data: { turbo_method: :delete }, class: "btn btn-danger", style: "float: right"; %>
+
+<div>
+  <%= form_with url: projects_path, method: :get, local: true, id: 'project-search-form' do %>
+    <%= text_field_tag :query, params[:query], placeholder: "Search for a project", style: "width: 300px;
+  padding: 8px;
+  margin-bottom: 20px;"%>
+    <%= submit_tag 'Search', style: "display:solid;" %> <!-- Hide the button, optional -->
+  <% end %>
+</div>
+
+<% if current_user.manager? %>
+  <%= link_to 'New Project', new_project_path, class: "btn btn-primary mb-3" %>
+<% end %>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @projects.each do |project| %>
+      <tr>
+        <td><%= project.name %></td>
+        <td><%= project.description %></td>
+        <td>
+          <%= link_to 'Show', project_path(project), class: 'btn btn-info btn-sm' %>
+            <% if can? :update, project %>
+        <%= link_to 'Edit', edit_project_path(project), class: 'btn btn-warning btn-sm' %>
+        <% end %>
+            <% if can? :destroy, project %>
+        <%= button_to 'Delete', project_path(project), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm'; %>
+        <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,12 @@
+<h1>Report a New Bug</h1>
+
+<%= render 'form', project: @project, bug: @bug %>
+<br>
+<div>
+<%= link_to 'Bugs List', project_bugs_path(@project),class: 'btn btn-warning' %>
+</div>
+<br>
+ <div>
+    <%= link_to 'Projects Portal', projects_path, class: "btn btn-primary mb-2" %>
+
+  </div>

@@ -1,0 +1,51 @@
+<div><h1>Bug Details</h1> <br>
+  </div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <p><strong>Title:</strong> <%= @bug.title %></p>
+    <p><strong>Description:</strong> <%= @bug.description %></p>
+    <p><strong>Project:</strong> <%= @bug.project.name %></p>
+    <p><strong>Category:</strong> <%= @bug.category.humanize %></p>
+    <p><strong>Status:</strong> <%= @bug.status.humanize %></p>
+    <p><strong>Assigned Developer:</strong> <%= @bug.developer ? @bug.developer.name : 'Unassigned' %></p>
+    <p><strong>Deadline:</strong> <%= @bug.deadline.present? ? @bug.deadline.strftime("%B %d, %Y %H:%M") : 'No deadline set' %></p>
+
+    <p><strong>Screenshot:</strong>
+      <% if @bug.screenshot.present? %>
+        <%= image_tag @bug.screenshot.url, class: 'img-fluid' %>
+      <% else %>
+        No screenshot available.
+      <% end %>
+    </p>
+
+    <% if current_user.user_type == 'developer' && @bug.developer_id != current_user.id %>
+      <%= button_to "Assign to Me", assign_to_self_project_bug_path(@project, @bug), method: :patch, class: 'btn btn-primary' %>
+    <% elsif current_user.user_type == 'developer' && @bug.developer_id == current_user.id %>
+      <p class="text-success">You are currently assigned to this bug.</p>
+    <% end %>
+
+    <% if @bug.developer_id == current_user.id %>
+      <%= form_with model: @bug, url: update_status_project_bug_path(@project, @bug), method: :patch, local: true do |f| %>
+        <div class="form-group">
+          <%= f.label :status, "Change Status" %>
+          <%= f.select :status, Bug.statuses.keys, {}, class: 'form-control' %>
+        </div>
+        <%= f.submit "Update Status", class: 'btn btn-secondary' %>
+      <% end %>
+    <% end %>
+
+    <% if can? :edit, @bug %>
+        <%= link_to 'Edit Bug', edit_project_bug_path(@project, @bug), class: 'btn btn-warning' %>
+        <% end %>
+
+    <% if can?(:destroy, @bug) %>
+  <%= button_to "Delete", project_bug_path(@project, @bug), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>
+<% end %>
+    <div>
+  <%= link_to 'Back to Project', project_path(@project), class: 'btn btn-info' %>
+
+    </div>
+  </div>
+
+</div>
